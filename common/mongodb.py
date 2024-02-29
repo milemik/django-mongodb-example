@@ -5,7 +5,7 @@ from pymongo.mongo_client import MongoClient
 from pymongo.server_api import ServerApi
 from django.conf import settings
 
-uri = f"mongodb+srv://{settings.MONGODB_USER}:{settings.MONGODB_PASSWORD}@{settings.MONGODB_URL}/?retryWrites=true&w=majority&appName={settings.MONGODB_APP_NAME}"
+uri = f"mongodb+srv://{settings.MONGODB_USER}:{settings.MONGODB_PASSWORD}@{settings.MONGODB_URL}/?retryWrites=true&w=majority&appName={settings.MONGODB_APP_NAME}"  # NOQA
 
 # Create a new client and connect to the server
 CLIENT = MongoClient(uri, server_api=ServerApi("1"))

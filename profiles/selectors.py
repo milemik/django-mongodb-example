@@ -1,7 +1,5 @@
 from typing import Mapping
 
-from pymongo.cursor import Cursor
-
 from common.mongodb import get_default_db
 
 

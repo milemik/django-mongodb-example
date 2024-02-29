@@ -21,7 +21,7 @@ class Profile:
 
     def full_check(self):
         if not self._check_email():
-            raise ValidationError(f"Email must be defined!")
+            raise ValidationError("Email must be defined!")
 
     def to_dict(self) -> dict:
         return self.__dict__
