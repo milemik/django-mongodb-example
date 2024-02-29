@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "django-mongo-example"
+version = "0.1.0"
+description = ""
+authors = ["milemik <milemik68@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "4.2"
+djangorestframework = "3.14.0"
+pymongo = {extras = ["gssapi", "snappy", "srv", "tls"], version = "^4.6.2"}
+django-environ = "^0.11.2"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.2.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
