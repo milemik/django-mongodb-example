@@ -21,4 +21,4 @@ DB_SELECT_TYPE = Database[Mapping[str, any]]
 
 
 def get_default_db() -> DB_SELECT_TYPE:
-    return CLIENT.get_database(settings.MONGODB_DB_NAME)
+    return CLIENT[settings.MONGODB_DB_NAME]

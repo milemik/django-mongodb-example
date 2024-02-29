@@ -19,6 +19,9 @@ class Profile:
             return False
         return bool(re.match(r"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z]+", self.email))
 
-    def _full_check(self):
+    def full_check(self):
         if not self._check_email():
             raise ValidationError(f"Email must be defined!")
+
+    def to_dict(self) -> dict:
+        return self.__dict__

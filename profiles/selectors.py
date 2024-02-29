@@ -1,10 +1,18 @@
-from common.mongodb import get_default_db, DB_SELECT_TYPE
+from typing import Mapping
+
+from pymongo.cursor import Cursor
+
+from common.mongodb import get_default_db
 
 
 class ProfileSelector:
     def __init__(self) -> None:
-        self.db = get_default_db()
+        db = get_default_db()
+        self.profile_table = db["profiles"]
 
-    @staticmethod
-    def get_user_by_email(db: DB_SELECT_TYPE, email: str) -> None:
-        return db.find_one({"email": email})
+    def get_user_by_email(self, email: str) -> Mapping[str, any]:
+        return self.profile_table.find_one({"email": email})
+
+    def get_all_profiles(self) -> list:
+        response = self.profile_table.find({}, {"_id": 0})
+        return list(response)
