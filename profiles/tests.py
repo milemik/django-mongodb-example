@@ -8,6 +8,7 @@ from rest_framework.test import APIClient
 
 from core.mongo_db import get_default_db
 from profiles.models import Profile
+from profiles.selectors import ProfileSelector
 from profiles.services import ProfileService
 
 
@@ -31,6 +32,12 @@ class ProfileServiceMock(ProfileService):
         self.profile_table = ProfileClientMock().profile_table
 
 
+class ProfileSelectorMock(ProfileSelector):
+    def __init__(self) -> None:
+        super().__init__()
+        self.profile_table = ProfileClientMock().profile_table
+
+
 class ProfileViewTestClass(TestCase):
     def setUp(self):
         self.create_url = reverse("profiles:create_profile")
@@ -43,9 +50,15 @@ class ProfileViewTestClass(TestCase):
 
     def test_create_profile(self):
         with patch("profiles.views.ProfileService", return_value=ProfileServiceMock()) as mock_collection:
-            response = self.client.post(self.create_url, {"email": "test@test.com"})
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(mock_collection.call_count, 1)
+            with patch("profiles.services.ProfileSelector", return_value=ProfileSelectorMock()) as mock_selector:
+                response_one = self.client.post(self.create_url, {"email": "test@test.com"})
+                response_two = self.client.post(self.create_url, {"email": "test@test.com"})
+
+        self.assertEqual(response_one.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(response_two.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(mock_collection.call_count, 2)
+        self.assertEqual(mock_selector.call_count, 2)
+        self.assertEqual(ProfileClientMock().profile_table.count_documents({}), 1)
 
     def tearDown(self):
         ProfileClientMock().profile_table.drop()
