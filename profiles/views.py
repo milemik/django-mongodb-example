@@ -18,7 +18,7 @@ class CreateProfileView(APIView):
     def post(self, request, *args, **kwargs) -> HttpResponse:
         serializer = self.CreateProfileSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        ProfileService().create_profile(Profile(**serializer.validated_data))
+        ProfileService().create_profile(profile=Profile(**serializer.validated_data))
         return Response({"message": "Please check your email for validation!"}, status=status.HTTP_201_CREATED)
 
 
