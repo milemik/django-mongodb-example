@@ -154,12 +154,8 @@ DB_SELECT_TYPE = Database[Mapping[str, any]]
 # Send a ping to confirm a successful connection
 try:
     CLIENT.admin.command("ping")
-    print("Pinged your deployment. You successfully connected to MongoDB!")
+    logging.log(level=logging.INFO, msg="Pinged your deployment. You successfully connected to MongoDB!")
 except Exception as e:
-    print(e)
+    raise f"ERROR: Could not connect to mongodb server.\n{e}"
 
 DB_SELECT_TYPE = Database[Mapping[str, any]]
-
-
-def get_default_db() -> DB_SELECT_TYPE:
-    return CLIENT[MONGODB_DB_NAME]

@@ -1,4 +1,4 @@
-from core.settings import get_default_db
+from core.mongo_db import get_default_db
 
 
 class ProfileCollection:
