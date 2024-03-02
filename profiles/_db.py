@@ -1,4 +1,4 @@
-from common.mongodb import get_default_db
+from core.settings import get_default_db
 
 
 class ProfileCollection:

@@ -10,10 +10,15 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
+import logging
 import os
 from pathlib import Path
+from typing import Mapping
 
 import environ
+from pymongo import MongoClient
+from pymongo.database import Database
+from pymongo.server_api import ServerApi
 
 env = environ.Env(
     # set casting, default value
@@ -138,10 +143,23 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-MONGODB_USER = os.environ.get("MONGODB_USER")
-MONGODB_PASSWORD = os.environ.get("MONGODB_PASSWORD")
-MONGODB_URL = os.environ.get("MONGODB_URL")
-MONGODB_APP_NAME = os.environ.get("MONGODB_APP_NAME")
 MONGODB_DB_NAME = os.environ.get("MONGODB_DB_NAME")
 
-from common.mongodb import *  # NOQA
+MONGO_URI = os.environ.get("MONGO_URI", default="mongodb://root:example@mongo:27017/")
+logging.log(level=logging.INFO, msg=f"CONNECTING TO: {MONGO_URI}")
+
+CLIENT = MongoClient(MONGO_URI, server_api=ServerApi("1"))
+DB_SELECT_TYPE = Database[Mapping[str, any]]
+
+# Send a ping to confirm a successful connection
+try:
+    CLIENT.admin.command("ping")
+    print("Pinged your deployment. You successfully connected to MongoDB!")
+except Exception as e:
+    print(e)
+
+DB_SELECT_TYPE = Database[Mapping[str, any]]
+
+
+def get_default_db() -> DB_SELECT_TYPE:
+    return CLIENT[MONGODB_DB_NAME]
