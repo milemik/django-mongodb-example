@@ -60,5 +60,34 @@ class ProfileViewTestClass(TestCase):
         self.assertEqual(mock_selector.call_count, 2)
         self.assertEqual(ProfileClientMock().profile_table.count_documents({}), 1)
 
+    def test_list_profile(self):
+        with patch("profiles.views.ProfileSelector", return_value=ProfileSelectorMock()) as mock_selector:
+            response = self.client.get(self.get_all_profile_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(mock_selector.call_count, 1)
+        self.assertEqual(response.data.get("profiles"), [])
+
+    def test_list_profile_with_profile(self):
+        profile = Profile(email="test@test.com")
+        ProfileClientMock().profile_table.insert_one(profile.to_dict())
+
+        with patch("profiles.views.ProfileSelector", return_value=ProfileSelectorMock()) as mock_selector:
+            response = self.client.get(self.get_all_profile_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(mock_selector.call_count, 1)
+        self.assertEqual(
+            response.data.get("profiles"),
+            [
+                {
+                    "birth_date": "",
+                    "email": "test@test.com",
+                    "email_verified": False,
+                    "first_name": "",
+                    "gender": "",
+                    "last_name": "",
+                }
+            ],
+        )
+
     def tearDown(self):
         ProfileClientMock().profile_table.drop()
